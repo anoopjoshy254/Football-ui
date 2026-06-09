@@ -1,0 +1,20 @@
+<nav class="navbar">
+  <div class="nav-brand">World Cup Polling</div>
+  <div class="nav-links">
+    <ng-container *ngIf="!(authService.currentUser$ | async)">
+      <a routerLink="/login" routerLinkActive="active">Login</a>
+      <a routerLink="/register" routerLinkActive="active">Register</a>
+    </ng-container>
+    
+    <ng-container *ngIf="(authService.currentUser$ | async)">
+      <a routerLink="/poll" routerLinkActive="active">Vote</a>
+      <a routerLink="/results" routerLinkActive="active">Results</a>
+      <a *ngIf="authService.isAdmin" routerLink="/admin" routerLinkActive="active">Admin</a>
+      <a href="javascript:void(0)" (click)="logout()">Logout</a>
+    </ng-container>
+  </div>
+</nav>
+
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>

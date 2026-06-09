@@ -1,0 +1,19 @@
+<div class="page-container">
+  <h1>World Cup Poll Results</h1>
+
+  <div class="alert error" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="results-container" *ngIf="results.length > 0">
+    <div class="result-bar-container" *ngFor="let result of results">
+      <div class="result-label">
+        <span class="team-name">{{ result.teamName }}</span>
+        <span class="vote-count">{{ result.voteCount }} votes</span>
+      </div>
+      <div class="result-bar-bg">
+        <div class="result-bar-fill" [style.width.%]="(result.voteCount / getMaxVotes()) * 100"></div>
+      </div>
+    </div>
+  </div>
+</div>

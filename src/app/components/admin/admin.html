@@ -1,0 +1,71 @@
+<div class="page-container">
+  <h1>Admin Dashboard</h1>
+
+  <div class="alert success" *ngIf="successMessage">{{ successMessage }}</div>
+  <div class="alert error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <div class="admin-grid">
+    <div class="admin-card minimal-card">
+      <h2>Add New Team</h2>
+      <form (ngSubmit)="addTeam()">
+        <div class="form-group">
+          <label>Team Name</label>
+          <input type="text" [(ngModel)]="teamName" name="teamName" required>
+        </div>
+        <div class="form-group">
+          <label>Country Code (2-letter, e.g. AR)</label>
+          <input type="text" [(ngModel)]="countryCode" name="countryCode" required maxlength="3">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Team</button>
+      </form>
+    </div>
+
+    <div class="admin-card minimal-card">
+      <h2>Poll Management</h2>
+      <div class="admin-actions">
+        <button class="btn btn-success" (click)="revealResults()">Publish Results</button>
+        <button class="btn btn-danger" (click)="resetPoll()">Reset Poll</button>
+      </div>
+
+      <div class="poll-status" style="margin-top: 2rem;">
+        <h3>Current Poll Status</h3>
+        <table class="table" *ngIf="pollResults.length > 0">
+          <thead>
+            <tr>
+              <th>Team</th>
+              <th>Votes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let result of pollResults">
+              <td>{{ result.teamName }}</td>
+              <td>{{ result.voteCount }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <p *ngIf="pollResults.length === 0">No results found.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-card minimal-card" style="margin-top: 2rem;">
+    <h2>Who Voted For Which Team</h2>
+    <table class="table" *ngIf="voteDetails.length > 0">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Team Voted For</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let vote of voteDetails">
+          <td>{{ vote.userName }}</td>
+          <td>{{ vote.teamName }}</td>
+          <td>{{ vote.votedAt | date:'medium' }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="voteDetails.length === 0">No votes have been cast yet.</p>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<div class="page-container">
+  <h1>World Cup Poll</h1>
+  <p class="subtitle">Select your favorite team to win the World Cup!</p>
+
+  <div class="alert success" *ngIf="successMessage">{{ successMessage }}</div>
+  <div class="alert error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <div class="teams-grid">
+    <div class="team-card minimal-card" *ngFor="let team of teams" (click)="vote(team.id)">
+      <h3>{{ team.name }}</h3>
+      <div class="vote-overlay">
+        <span>Click to Vote</span>
+      </div>
+    </div>
+  </div>
+</div>
