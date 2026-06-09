@@ -1,50 +1,55 @@
 pipeline {
     agent any
-
+ 
     environment {
-        DOCKER_IMAGE = 'football-ui'
-        DOCKER_TAG = "v${env.BUILD_NUMBER}"
-        REGISTRY = 'your-docker-registry.com'
+        CONTAINER_NAME = 'football-angular-ui'
+        IMAGE_NAME = 'football-frontend'
+        NETWORK_NAME = 'football-network'
+        PORT_MAPPING = '4200:80'
     }
-
+ 
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-        
+ 
         stage('Build Docker Image') {
             steps {
-                script {
-                    dockerImage = docker.build("${REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG}", "-f Dockerfile .")
-                }
+                bat "docker build --no-cache -t ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${BUILD_NUMBER} ."
             }
         }
-        
-        stage('Push Docker Image') {
+ 
+        stage('Deploy Container') {
             steps {
                 script {
-                    docker.withRegistry("https://${REGISTRY}", 'docker-credentials-id') {
-                        dockerImage.push()
-                        dockerImage.push('latest')
-                    }
+                    // Ensure Docker network exists
+                    bat "docker network create ${NETWORK_NAME} 2>nul || ver >nul"
+                   
+                    // Stop and remove existing container if running
+                    bat "docker stop ${CONTAINER_NAME} 2>nul || ver >nul"
+                    bat "docker rm ${CONTAINER_NAME} 2>nul || ver >nul"
+                   
+                    // Launch new container using Windows Batch line continuation
+                    bat """
+                        docker run -d ^
+                            --name ${CONTAINER_NAME} ^
+                            --network ${NETWORK_NAME} ^
+                            -p ${PORT_MAPPING} ^
+                            ${IMAGE_NAME}:latest
+                    """
                 }
-            }
-        }
-        
-        stage('Deploy') {
-            steps {
-                // In a real scenario, you might ssh into the server and run docker-compose pull && docker-compose up -d
-                // Or use kubectl if deploying to Kubernetes.
-                echo "Deploying ${DOCKER_IMAGE}:${DOCKER_TAG}..."
             }
         }
     }
-    
+ 
     post {
-        always {
-            cleanWs()
+        success {
+            echo "Frontend pipeline completed successfully!"
+        }
+        failure {
+            echo "Frontend pipeline failed. Please check the logs."
         }
     }
 }
