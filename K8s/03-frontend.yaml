@@ -1,31 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: product-frontend
+  name: football-frontend
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: product-frontend
+      app: football-frontend
   template:
     metadata:
       labels:
-        app: product-frontend
+        app: football-frontend
     spec:
       containers:
-        - name: product-frontend
-          image: <ACR_NAME>.azurecr.io/product-frontend:latest
+        - name: football-frontend
+          image: <ACR_NAME>.azurecr.io/football-frontend:latest
           ports:
             - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: product-frontend
+  name: football-frontend
 spec:
   type: LoadBalancer
   selector:
-    app: product-frontend
+    app: football-frontend
   ports:
     - port: 80
       targetPort: 80

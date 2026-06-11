@@ -5,7 +5,7 @@ pipeline {
         ACR     = 'anoopfootballacr'
         RG      = 'football-rg'
         AKS     = 'football-aks'
-        IMAGE   = 'product-frontend'
+        IMAGE   = 'football-frontend'
         AZ_CLIENT_ID     = credentials('azure-client-id')
         AZ_CLIENT_SECRET = credentials('azure-client-secret')
         AZ_TENANT_ID     = credentials('azure-tenant-id')
@@ -41,15 +41,15 @@ pipeline {
                 bat 'az aks get-credentials -n %AKS% -g %RG% --overwrite-existing'
                 powershell '(Get-Content k8s/03-frontend.yaml) -replace "<ACR_NAME>", $env:ACR | Set-Content $env:TEMP\\03-frontend.yaml'
                 bat 'kubectl apply -f %TEMP%\\03-frontend.yaml'
-                bat 'kubectl set image deployment/product-frontend product-frontend=%ACR%.azurecr.io/%IMAGE%:%BUILD_NUMBER%'
-                bat 'kubectl rollout status deployment/product-frontend --timeout=120s'
+                bat 'kubectl set image deployment/football-frontend football-frontend=%ACR%.azurecr.io/%IMAGE%:%BUILD_NUMBER%'
+                bat 'kubectl rollout status deployment/football-frontend --timeout=120s'
             }
         }
     }
 
     post {
-        success { echo "product-frontend ${BUILD_NUMBER} deployed to AKS." }
-        failure { echo 'product-frontend pipeline failed.' }
+        success { echo "football-frontend ${BUILD_NUMBER} deployed to AKS." }
+        failure { echo 'football-frontend pipeline failed.' }
         always  { bat 'az logout || exit 0' }
     }
 }
