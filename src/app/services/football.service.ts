@@ -7,8 +7,8 @@ import { CreateTeamDto, PollResultDto, SubmitPollDto, TeamResponseDto, VoteDetai
   providedIn: 'root'
 })
 export class FootballService {
-  private userApiUrl = 'http://localhost:5162/api/user';
-  private adminApiUrl = 'http://localhost:5162/api/admin';
+  private userApiUrl = '/api/user';
+  private adminApiUrl = '/api/admin';
 
   constructor(private http: HttpClient) {}
 

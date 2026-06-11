@@ -8,7 +8,7 @@ import { jwtDecode } from 'jwt-decode';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5162/api/auth';
+  private apiUrl = '/api/auth';
   
   private tokenKey = 'jwt_token';
   private currentUserSubject = new BehaviorSubject<any>(null);
