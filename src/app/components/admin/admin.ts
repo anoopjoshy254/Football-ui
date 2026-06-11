@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FootballService } from '../../services/football.service';
+import { SignalrService } from '../../services/signalr.service';
 import { PollResultDto, VoteDetailDto } from '../../models/football.models';
 
 @Component({
@@ -20,10 +21,19 @@ export class AdminComponent implements OnInit {
   voteDetails: VoteDetailDto[] = [];
   pollResults: PollResultDto[] = [];
 
-  constructor(private footballService: FootballService) {}
+  constructor(
+    private footballService: FootballService,
+    private signalrService: SignalrService
+  ) {}
 
   ngOnInit() {
     this.loadData();
+    this.signalrService.startConnection();
+    this.signalrService.addPollUpdateListener();
+    this.signalrService.pollUpdateReceived$.subscribe(() => {
+      // Reload data whenever a poll update event is received from SignalR
+      this.loadData();
+    });
   }
 
   loadData() {
