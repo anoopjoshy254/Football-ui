@@ -28,7 +28,12 @@
       </div>
 
       <div class="poll-status" style="margin-top: 2rem;">
-        <h3>Current Poll Status</h3>
+        <h3 style="display: flex; align-items: center; gap: 0.5rem;">
+          Current Poll Status 
+          <span class="live-indicator">
+            <span class="pulse-dot"></span> LIVE
+          </span>
+        </h3>
         <table class="table" *ngIf="pollResults.length > 0">
           <thead>
             <tr>
